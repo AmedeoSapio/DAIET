@@ -2,11 +2,12 @@
 
 
 ## Resources
-* DAIET project website: sands.kaust.edu.sa/daiet/
+* DAIET project website: [sands.kaust.edu.sa/daiet/](sands.kaust.edu.sa/daiet/)
 * HotNets 2017 paper: 
-
-  *Amedeo Sapio, Ibrahim Abdelaziz, Abdulla Aldilaijan, Marco Canini, and Panos Kalnis. "**In-Network Computation is a ~~Dumb~~ Idea Whose Time Has Come**". In Proceedings of the 16th ACM Workshop on Hot Topics in Networks. ACM, 2017.*
-
+  
+  *Amedeo Sapio, Ibrahim Abdelaziz, Abdulla Aldilaijan, Marco Canini, and Panos Kalnis <br>
+  **In-Network Computation is a ~~Dumb~~ Idea Whose Time Has Come** <br>
+  In Proceedings of the 16th ACM Workshop on Hot Topics in Networks. ACM, 2017.*
 
 ## ACM HotNets 2017 Experiment:
 Note: tested with Ubuntu 17.04 Zesty Zapus (amd64) on May, 2017. 
