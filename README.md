@@ -2,7 +2,7 @@
 
 
 ## Resources
-* DAIET project website: [sands.kaust.edu.sa/daiet/](sands.kaust.edu.sa/daiet/)
+* DAIET project website: [sands.kaust.edu.sa/daiet/](http://sands.kaust.edu.sa/daiet/)
 * HotNets 2017 paper: 
   
   *Amedeo Sapio, Ibrahim Abdelaziz, Abdulla Aldilaijan, Marco Canini, and Panos Kalnis <br>
