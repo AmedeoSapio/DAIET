@@ -1,0 +1,28 @@
+TABLE				ACTION				MATCH				PARAMETERS				NUMBER OF ENTRIES
+-----------------------------	------------------------	------------------		----------------------------------	----------------------
+
+tree_id_adapter_table		set_tree_id			TREE_ID				NORMALIZED_TREE_ID			NUMBER_OF_TREES
+tree_id_adapter_table		skip_packet			default				-					1
+
+load_valid_entries_index_table	load_valid_entries_index	NORMALIZED_TREE_ID		NORMALIZED_TREE_ID*NUMBER_OF_CELLS	NUMBER_OF_TREES
+
+load_remaining_children_table	load_remaining_children		default				-					1
+
+set_child_nodes_table		set_child_nodes			NORMALIZED_TREE_ID		NUMBER_OF_CHILD_NODES			NUMBER_OF_TREES
+
+entry_processing_table		process_entry_*N*		[1:MAX_ENTRIES_PER_PACKET]	-					MAX_ENTRIES_PER_PACKET
+entry_processing_table		_drop				default				-					1
+
+end_table			end_action			default				-					1
+
+preamble_setup_table		preamble_setup			[1:MAX_ENTRIES_PER_PACKET[	[1:MAX_ENTRIES_PER_PACKET[		MAX_ENTRIES_PER_PACKET-1
+preamble_setup_table		preamble_setup			default				MAX_ENTRIES_PER_PACKET			1
+
+flush_table			send_*N*_entries		[1:MAX_ENTRIES_PER_PACKET[	-					MAX_ENTRIES_PER_PACKET-1
+flush_table           		send_*N*_entries		default				-					1
+
+forwarding_table		set_port			TREE_ID				OUTPUT_PORT				NUMBER_OF_TREES
+
+recirculate_table		_recirculate			1				-					1
+
+mac_forwarding_table		set_port			DST_MAC				OUTPUT_PORT				NUMBER_OF_HOSTS
