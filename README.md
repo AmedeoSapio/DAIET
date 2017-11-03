@@ -42,19 +42,20 @@ sudo apt-get update
 sudo apt-get install -y docker-ce
 sudo service docker start
 ```
-2. Clone the P4 compiler repository and install it:
+2. Download the P4 compiler repository and install it:
 ```bash
-git clone https://github.com/p4lang/p4c-bm.git
-cd p4c-bm
+wget https://github.com/p4lang/p4c-bm/archive/1.9.0.zip
+unzip 1.9.0.zip
+cd p4c-bm-1.9.0
 sudo pip install -r requirements.txt
 sudo pip install -r requirements_v1_1.txt
 sudo python setup.py install
 cd ..
 ```
-3. Clone the DAIET and simpleMR repositories:
+3. Clone the DAIET and DAIET-MapReduce repositories:
 ```bash
-git clone https://github.com/AmedeoSapio/DAIET 
-git clone https://github.com/ibrahimabdelaziz/simplemr
+git clone https://github.com/AmedeoSapio/DAIET.git
+git clone https://github.com/ibrahimabdelaziz/DAIET-MapReduce.git
 ```
 4. Compile DAIET:
 ```bash
@@ -62,18 +63,18 @@ cd DAIET
 p4c-bmv2 p4src/daiet.p4 --json daiet.json
 cd ..
 ```
-5. Compile simpleMR:
+5. Compile DAIET-MapReduce:
 ```bash
-cd simplemr
+cd DAIET-MapReduce 
 mvn package
 chmod +x dist/bin/*
 cd ..
 ```
 6. Extract the dataset:
 ```bash
-unzip DAIET/tests/single_switch/random_text_500mb.zip
+unzip DAIET/tests/data/random_text_500mb.zip
 ```
-7. We pin the container running the switch on the cores {4,5,6,7} and the 12 hosts containers on the cores from 8 to 31. You must change the parameter: “--cpuset-cpus”  **twice** in “DAIET/tests/single_switch/Experiment.py” if you don’t have enough cores. 
+7. We pin the container running the switch on the cores {4,5,6,7} and the 12 hosts containers on the cores from 8 to 31. You must change the parameter: “--cpuset-cpus”  **twice** in “DAIET/tests/single\_switch/Experiment.py” if you don’t have enough cores. 
 We also isolated those cores from kernel scheduling using the “isolcpus” kernel parameter.
 
 8. *Optional*: To run the experiment using a RAMdisk, we changed Docker's storage base directory (where container and images go) using the -g option when starting the Docker daemon. 
@@ -94,22 +95,22 @@ cd DAIET/tests/single_switch/
 ./Experiment.py ${wd}
 ```
 
-10. Run a job once without using DAIET. This is needed because simpleMR assigns the reduce tasks (and thus the reducer ID used as tree ID in the packets) randomly among the workers. We can see the assignment in a first job and predict the assignment for the next job, which follows the same order. In a future version, the jobtracker would push the rules in the switch when a new reduce task is scheduled.
+10. Run a job once without using DAIET. This is needed because DAIET-MapReduce assigns the reduce tasks (and thus the reducer ID used as tree ID in the packets) randomly among the workers. We can see the assignment in a first job and predict the assignment for the next job, which follows the same order. In a future version, the jobtracker would push the rules in the switch when a new reduce task is scheduled.
 ```bash
 sudo screen -r h13
 # Now you are in the master container
 
 # Load the data file in the DFS
-./simplemr/dist/bin/dfs-load -rh h13 -rp 7777 -r 12 \
+./DAIET-MapReduce/dist/bin/dfs-load -rh h13 -rp 7777 -r 12 \
     random_text_500mb.txt
 
 # Start a job without DAIET (24 mappers, 12 reducers)
-./simplemr/dist/bin/examples-wordcount \
+./DAIET-MapReduce/dist/bin/examples-wordcount \
     random_text_500mb.txt result.txt -m 24 -r 12 -rh h13 \
     -rp 7777
 
 # Check the job status
-./simplemr/dist/bin/mapreduce-jobs -rh h13 -rp 7777
+./DAIET-MapReduce/dist/bin/mapreduce-jobs -rh h13 -rp 7777
 ```
 Wait for the end of the job and then press “CTRL+A” and “D” to exit from the master container.
 
@@ -117,8 +118,8 @@ Wait for the end of the job and then press “CTRL+A” and “D” to exit from
 ```bash
 sudo ./extract_reducer_id.sh
 ```
-This command prints 12 integers. You have to add 36 (number of mapper and reducers) to each one of them and use the result to update the file “DAIET/tests/single_switch/commands.txt” (replace “XX“ with the new values).
-Specifically, the integers must be used as matching value in the “tree_id_adapter_table” and “forwarding_table”. 
+This command prints 12 integers. You have to add 36 (number of mapper and reducers) to each one of them and use the result to update the file “DAIET/tests/single\_switch/commands.txt” (replace “XX“ with the new values).
+Specifically, the integers must be used as matching value in the “tree\_id\_adapter\_table” and “forwarding\_table”. 
 
 12. Add the flow rules to the switch:
 ```bash
@@ -137,12 +138,12 @@ sudo screen -r h13
 # Now you are in the master container
 
 # Start a job with DAIET (24 mappers, 12 reducers)
-./simplemr/dist/bin/examples-wordcount \
+./DAIET-MapReduce/dist/bin/examples-wordcount \
     random_text_500mb.txt result.txt -m 24 -r 12 -rh h13 \
     -rp 7777 -nr
 
 # Check the job status
-./simplemr/dist/bin/mapreduce-jobs -rh h13 -rp 7777
+./DAIET-MapReduce/dist/bin/mapreduce-jobs -rh h13 -rp 7777
 ```
 Wait for the end of the job and then press “CTRL+A” and “D” to exit from the master container.
 
