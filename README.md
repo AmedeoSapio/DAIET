@@ -54,8 +54,8 @@ cd ..
 ```
 3. Clone the DAIET and DAIET-MapReduce repositories:
 ```bash
-git clone https://github.com/AmedeoSapio/DAIET.git
-git clone https://github.com/ibrahimabdelaziz/DAIET-MapReduce.git
+git clone [https://github.com/AmedeoSapio/DAIET.git](https://github.com/AmedeoSapio/DAIET)
+git clone [https://github.com/ibrahimabdelaziz/DAIET-MapReduce.git](https://github.com/ibrahimabdelaziz/DAIET-MapReduce)
 ```
 4. Compile DAIET:
 ```bash
