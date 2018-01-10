@@ -9,7 +9,7 @@ Experimental results show that our approach achieves around 88\% data reduction 
 If you use DAIET in your research, please cite our paper:
  ```
 @inproceedings{sapio2017daiet,
- title={In-Network Computation is a Dumb Idea Whose Time Has Come},
+ title={{In-Network Computation is a Dumb Idea Whose Time Has Come}},
  author={Amedeo Sapio, Ibrahim Abdelaziz, Abdulla Aldilaijan, Marco Canini, and Panos Kalnis},
  booktitle={Proceedings of the 16th ACM Workshop on Hot Topics in Networks (HotNets)},
  year={2017},
