@@ -68,7 +68,7 @@ class Experiment:
                 print self.run_cmd("ip netns exec ns-h"+str(i)+" arp -s 11.0.0."+str(k)+" 00:25:90:8a:c5:0"+hex(k)[-1]+" -i h"+str(i)+"-sw")
 
             # Copy data locally
-            print self.run_cmd("docker container exec h"+str(i)+" cp -r /Testbed/simplemr /")
+            print self.run_cmd("docker container exec h"+str(i)+" cp -r /Testbed/DAIET-MapReduce /")
 
             # Disable TCP offload
             print self.run_cmd("docker container exec h"+str(i)+" ethtool --offload h"+str(i)+"-sw rx off tx off")
@@ -83,11 +83,11 @@ class Experiment:
         for i in range(1, self.number_of_hosts+2):
             print self.run_cmd("docker container exec bmv2 /Testbed/DAIET/tests/single_switch/add_rule.sh \"table_add mac_forwarding_table set_port 00:25:90:8a:c5:0%s => %d\""%(hex(i)[-1],i-1))
 
-        # Start simplemr
+        # Start DAIET-MapReduce
 
         ## At all workers
         for i in range(1, self.number_of_hosts+2):
-            print self.run_cmd("docker container exec h"+str(i)+" nohup /simplemr/dist/bin/registry 7777 > /dev/null 2>&1 &")
+            print self.run_cmd("docker container exec h"+str(i)+" nohup /DAIET-MapReduce/dist/bin/registry 7777 > /dev/null 2>&1 &")
 
             # Set hostname resolution
             for j in range(1, self.number_of_hosts+2):
@@ -96,7 +96,7 @@ class Experiment:
         time.sleep(10)
 
         ## At the master
-        print self.run_cmd("docker container exec h"+str(self.number_of_hosts+1)+" nohup /simplemr/dist/bin/dfs-master -l dfsmaster.log -rp 7777 > /dev/null 2>&1 &")
+        print self.run_cmd("docker container exec h"+str(self.number_of_hosts+1)+" nohup /DAIET-MapReduce/dist/bin/dfs-master -l dfsmaster.log -rp 7777 > /dev/null 2>&1 &")
 
         # Copy data file
         print self.run_cmd("docker container exec h"+str(self.number_of_hosts+1)+" cp /Testbed/random_text_500mb.txt /")
@@ -105,16 +105,16 @@ class Experiment:
 
         ## At the slaves
         for i in range(1, self.number_of_hosts+1):
-            print self.run_cmd("docker container exec h"+str(i)+" nohup /simplemr/dist/bin/dfs-slave -d data_dir -mh 11.0.0."+str(self.number_of_hosts+1)+" -mp 7777 -rp 7777 -n 11.0.0."+str(i)+" > /dev/null 2>&1 &")
+            print self.run_cmd("docker container exec h"+str(i)+" nohup /DAIET-MapReduce/dist/bin/dfs-slave -d data_dir -mh 11.0.0."+str(self.number_of_hosts+1)+" -mp 7777 -rp 7777 -n 11.0.0."+str(i)+" > /dev/null 2>&1 &")
 
         ## At the master
-        print self.run_cmd("docker container exec h"+str(self.number_of_hosts+1)+" nohup /simplemr/dist/bin/mapreduce-jobtracker -dh 11.0.0."+str(self.number_of_hosts+1)+" -dp 7777 -rp 7777 -fp 8888 -t temp_dir > /dev/null 2>&1 &")
+        print self.run_cmd("docker container exec h"+str(self.number_of_hosts+1)+" nohup /DAIET-MapReduce/dist/bin/mapreduce-jobtracker -dh 11.0.0."+str(self.number_of_hosts+1)+" -dp 7777 -rp 7777 -fp 8888 -t temp_dir > /dev/null 2>&1 &")
         
         time.sleep(5)
 
         ## At the slaves
         for i in range(1, self.number_of_hosts+1):
-            print self.run_cmd("docker container exec h"+str(i)+" nohup /simplemr/dist/bin/mapreduce-tasktracker -dh 11.0.0."+str(self.number_of_hosts+1)+" -dp 7777 -jh 11.0.0."+str(self.number_of_hosts+1)+" -jp 7777 -rp 7777 -fp 8889 -t TEMP_DIR > /dev/null 2>&1 &")
+            print self.run_cmd("docker container exec h"+str(i)+" nohup /DAIET-MapReduce/dist/bin/mapreduce-tasktracker -dh 11.0.0."+str(self.number_of_hosts+1)+" -dp 7777 -jh 11.0.0."+str(self.number_of_hosts+1)+" -jp 7777 -rp 7777 -fp 8889 -t TEMP_DIR > /dev/null 2>&1 &")
 
     def clean(self):
 
